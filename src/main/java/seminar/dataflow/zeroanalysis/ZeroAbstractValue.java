@@ -149,17 +149,36 @@ public enum ZeroAbstractValue {
      * @return the result of the division.
      */
     public ZeroAbstractValue divideBy(ZeroAbstractValue another) {
-        if (this.equals(BOTTOM)) {
+        if (this.equals(BOTTOM)|| another.equals(BOTTOM)) {
             return BOTTOM;
         }
-        if (another.equals(ZERO) || another.equals(NON_POSITIVE) || another.equals(NON_NEGATIVE) || another.equals(TOP) || another.equals(BOTTOM)) {
+        if (another.equals(ZERO)) {
             return BOTTOM; // Division by zero is undefined
+        }
+        if (this.equals(ZERO)) {
+            return ZERO; // 0 divided by anything is 0
+        }
+        if(another.equals(NOT_ZERO)) {
+            return TOP; // Dividing by a non-zero value doesn't change the sign
         }
         if (another.equals(POSITIVE)) {
             return this;
         }
         if (another.equals(NEGATIVE)) {
             return this.negate();
+        }
+        if (another.equals(NON_POSITIVE)) {
+            if (this.equals(POSITIVE)) {
+                return NON_NEGATIVE;
+            } else if (this.equals(NEGATIVE)) {
+                return NON_POSITIVE;
+            } else if (this.equals(NON_POSITIVE)) {
+                return NON_NEGATIVE;
+            } else if (this.equals(NON_NEGATIVE)) {
+                return NON_POSITIVE;
+            } else if (this.equals(NOT_ZERO)) {
+                return TOP;
+            }
         }
         return TOP;
     }
