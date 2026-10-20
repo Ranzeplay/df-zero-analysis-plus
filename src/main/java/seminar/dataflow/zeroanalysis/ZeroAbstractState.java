@@ -63,8 +63,17 @@ public class ZeroAbstractState {
      */
     public ZeroAbstractState union(ZeroAbstractState another) {
         ZeroAbstractState result = new ZeroAbstractState();
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException("Operation is not implemented yet.");
+
+        this.getDefinedVariables().stream().forEach(k -> result.setValue(k, this.getValue(k)));
+        another.getDefinedVariables().stream().forEach(k -> {
+            if (result.hasValue(k)) {
+                result.setValue(k, result.getValue(k).merge(another.getValue(k)));
+            } else {
+                result.setValue(k, another.getValue(k));
+            }
+        });
+
+        return result;
     }
 
     /**
