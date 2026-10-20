@@ -1,15 +1,15 @@
 package dataflow.zeroanalysis;
 
-import seminar.dataflow.Launcher;
-import seminar.dataflow.zeroanalysis.DivisionByZeroAnalysis;
-import seminar.dataflow.zeroanalysis.ZeroAbstractState;
-import seminar.dataflow.zeroanalysis.ZeroAbstractValue;
-import org.junit.jupiter.api.Test;
-
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import seminar.dataflow.Launcher;
+import seminar.dataflow.zeroanalysis.DivisionByZeroAnalysis;
+import seminar.dataflow.zeroanalysis.ZeroAbstractState;
+import seminar.dataflow.zeroanalysis.ZeroAbstractValue;
 
 public class DivisionByZeroTest {
     @Test

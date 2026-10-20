@@ -67,8 +67,80 @@ public enum ZeroAbstractValue {
      * @return the result of the addition.
      */
     public ZeroAbstractValue add(ZeroAbstractValue another) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        // We should have 64 cases in total
+        // 15 cases
+         if (this.equals(BOTTOM)|| another == BOTTOM) {
+            return BOTTOM;
+         }
+         // 15 cases
+         if (this.equals(TOP) || another == TOP) {
+            return TOP;
+         }
+         // 8
+         if (this.equals(ZERO)) {
+            return another;
+         }// 7
+         if (another.equals(ZERO)) {
+            return this;
+         }
+         // 1
+         if (this.equals(POSITIVE) && another.equals(POSITIVE)) {
+            return POSITIVE;
+         }
+         // 1
+         if (this.equals(NEGATIVE) && another.equals(NEGATIVE)) {
+            return NEGATIVE;
+         }
+         // 2
+         if ((this.equals(POSITIVE) && another.equals(NEGATIVE)) || (this.equals(NEGATIVE) && another.equals(POSITIVE))) {
+            return TOP;
+         }
+         // 2
+         if ((this.equals(POSITIVE) && another.equals(NON_POSITIVE)) || (this.equals(NON_POSITIVE) && another.equals(POSITIVE))) {
+            return TOP;
+         }
+         // 2
+         if ((this.equals(NEGATIVE) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(NEGATIVE))) {
+                return TOP;
+         }
+         //2 
+         if ((this.equals(NON_POSITIVE) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(NON_POSITIVE))) {
+            return TOP;
+         }
+         // 2
+         if ((this.equals(POSITIVE) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(POSITIVE))) {
+            return NON_NEGATIVE;
+         }
+         // 2
+         if ((this.equals(NEGATIVE) && another.equals(NON_POSITIVE)) || (this.equals(NON_POSITIVE) && another.equals(NEGATIVE))) {
+            return NON_POSITIVE;
+         }
+         if ((this.equals(NON_POSITIVE) && another.equals(NON_POSITIVE))) {
+            return NON_POSITIVE;
+         }
+         if ((this.equals(NON_NEGATIVE) && another.equals(NON_NEGATIVE))) {
+            return NON_NEGATIVE;
+         }
+         if ((this.equals(NOT_ZERO) && another.equals(NOT_ZERO))) {
+            return TOP;
+         }
+         if ((this.equals(NOT_ZERO) && another.equals(POSITIVE)) || (this.equals(POSITIVE) && another.equals(NOT_ZERO))) {
+            return TOP;
+         }
+         if ((this.equals(NOT_ZERO) && another.equals(NEGATIVE)) || (this.equals(NEGATIVE) && another.equals(NOT_ZERO))) {
+            return TOP;
+         }
+         if ((this.equals(NOT_ZERO) && another.equals(NON_POSITIVE)) || (this.equals(NON_POSITIVE) && another.equals(NOT_ZERO))) {
+            return TOP;
+         }
+         if ((this.equals(NOT_ZERO) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(NOT_ZERO))) {
+            return TOP;
+         }
+         return TOP;
+        
+
+
+
     }
 
     /**
@@ -77,8 +149,19 @@ public enum ZeroAbstractValue {
      * @return the result of the division.
      */
     public ZeroAbstractValue divideBy(ZeroAbstractValue another) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        if (this.equals(BOTTOM)) {
+            return BOTTOM;
+        }
+        if (another.equals(ZERO) || another.equals(NON_POSITIVE) || another.equals(NON_NEGATIVE) || another.equals(TOP) || another.equals(BOTTOM)) {
+            return BOTTOM; // Division by zero is undefined
+        }
+        if (another.equals(POSITIVE)) {
+            return this;
+        }
+        if (another.equals(NEGATIVE)) {
+            return this.negate();
+        }
+        return TOP;
     }
 
     /**
@@ -87,8 +170,53 @@ public enum ZeroAbstractValue {
      * @return the result of the multiplication.
      */
     public ZeroAbstractValue multiplyBy(ZeroAbstractValue another) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        if (another.equals(BOTTOM) || this.equals(BOTTOM)) {
+            return BOTTOM;
+        }
+        if (this.equals(ZERO) || another.equals(ZERO)) {
+            return ZERO;
+        }
+        if (this.equals(POSITIVE)) {
+            return another;
+        }
+        if (this.equals(NEGATIVE)) {
+            return another.negate();
+        }
+        if (this.equals(NON_POSITIVE)) {
+            if (another.equals(POSITIVE)) {
+                return NON_POSITIVE;
+            } else if (another.equals(NEGATIVE)) {
+                return NON_NEGATIVE;
+            } else if (another.equals(NON_POSITIVE)) {
+                return NON_POSITIVE;
+            } else if (another.equals(NON_NEGATIVE)) {
+                return NON_POSITIVE;
+            } else if (another.equals(NOT_ZERO)) {
+                return NOT_ZERO;
+            }
+        }
+        if (this.equals(NON_NEGATIVE)) {
+            if (another.equals(POSITIVE)) {
+                return NON_NEGATIVE;
+            } else if (another.equals(NEGATIVE)) {
+                return NON_POSITIVE;
+            } else if (another.equals(NON_POSITIVE)) {
+                return NON_POSITIVE;
+            } else if (another.equals(NON_NEGATIVE)) {
+                return NON_NEGATIVE;
+            } else if (another.equals(NOT_ZERO)) {
+                return NOT_ZERO;
+            }
+        }
+        if (this.equals(NOT_ZERO)) {
+            if (another.equals(POSITIVE) || another.equals(NEGATIVE) || another.equals(NOT_ZERO)|| another.equals(NON_POSITIVE) || another.equals(NON_NEGATIVE)) {
+                return NOT_ZERO;
+            }
+        }
+        // if (this.equals(TOP) || another.equals(TOP)) {
+        //     return TOP;
+        // }
+        return TOP; // Default case
     }
 
     /**
@@ -97,8 +225,41 @@ public enum ZeroAbstractValue {
      * @return the result of the subtraction.
      */
     public ZeroAbstractValue substract(ZeroAbstractValue another) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        
+        if (this.equals(BOTTOM) || another.equals(BOTTOM)) {
+            return BOTTOM;
+        }
+        if (this.equals(ZERO)) {
+            return another.negate();
+        }
+        if (another.equals(ZERO)) {
+            return this;
+        }
+        if (this.equals(POSITIVE)) {
+            if (another.equals(POSITIVE)) {
+                return TOP;
+            } else if (another.equals(NEGATIVE)) {
+                return POSITIVE;
+            } else if (another.equals(NON_POSITIVE)) {
+                return POSITIVE;
+            } else if (another.equals(NON_NEGATIVE)) {
+                return TOP;
+            } else if (another.equals(NOT_ZERO)) {
+                return TOP;
+            }
+        }
+        if (this.equals(NEGATIVE)) {
+            if (another.equals(POSITIVE)) {
+                return NEGATIVE;
+            } else if (another.equals(NEGATIVE)|| another.equals(NON_POSITIVE) || another.equals(NOT_ZERO)) {
+                return TOP;
+            } else if (another.equals(NON_NEGATIVE)) {
+                return NEGATIVE;
+            
+            }
+        }
+        // For NON_POSITIVE, NON_NEGATIVE, NOT_ZERO, and TOP, we can conservatively return TOP
+        return TOP; // Default case
     }
 
     /**
@@ -107,8 +268,71 @@ public enum ZeroAbstractValue {
      * @return the result of the merge.
      */
     public ZeroAbstractValue merge(ZeroAbstractValue another) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        if (this.equals(another)){
+            return this;
+        }
+        if (this.equals(BOTTOM)||another.equals(BOTTOM)) {
+            return BOTTOM;
+        }
+        if (this.equals(TOP)||another.equals(TOP)) {
+            return TOP;
+        }
+        if ((this.equals(ZERO) && another.equals(POSITIVE)) || (this.equals(POSITIVE) && another.equals(ZERO))) {
+            return NON_NEGATIVE;
+        }
+        if ((this.equals(ZERO) && another.equals(NEGATIVE)) || (this.equals(NEGATIVE) && another.equals(ZERO))) {
+            return NON_POSITIVE;
+        }
+        if ((this.equals(POSITIVE) && another.equals(NEGATIVE)) || (this.equals(NEGATIVE) && another.equals(POSITIVE))) {
+            return NOT_ZERO;
+        }
+        if ((this.equals(NON_POSITIVE) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(NON_POSITIVE))) {
+            return TOP;
+        }
+        if ((this.equals(NON_POSITIVE) && another.equals(POSITIVE)) || (this.equals(POSITIVE) && another.equals(NON_POSITIVE))) {
+            return TOP;
+        }
+        if ((this.equals(NON_NEGATIVE) && another.equals(NEGATIVE)) || (this.equals(NEGATIVE) && another.equals(NON_NEGATIVE))) {
+            return TOP;
+        }
+        if ((this.equals(NON_POSITIVE) && another.equals(ZERO)) || (this.equals(ZERO) && another.equals(NON_POSITIVE))) {
+            return NON_POSITIVE;
+        }
+        if ((this.equals(NON_NEGATIVE) && another.equals(ZERO)) || (this.equals(ZERO) && another.equals(NON_NEGATIVE))) {
+            return NON_NEGATIVE;
+        }
+        if ((this.equals(NOT_ZERO) && another.equals(ZERO)) || (this.equals(ZERO) && another.equals(NOT_ZERO))) {
+            return TOP;
+        }
+        if ((this.equals(NOT_ZERO) && another.equals(POSITIVE)) || (this.equals(POSITIVE) && another.equals(NOT_ZERO))) {
+            return NOT_ZERO;
+        }
+        if ((this.equals(NOT_ZERO) && another.equals(NEGATIVE)) || (this.equals(NEGATIVE) && another.equals(NOT_ZERO))) {
+            return NOT_ZERO;
+        }
+        if ((this.equals(NOT_ZERO) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(NOT_ZERO))) {
+            return TOP;
+        }
+        if ((this.equals(NOT_ZERO) && another.equals(NON_POSITIVE)) || (this.equals(NON_POSITIVE) && another.equals(NOT_ZERO))) {
+            return TOP;
+        }
+
+        return TOP; // Default case
+    }
+
+    public ZeroAbstractValue negate() {
+        switch (this) {
+            case NEGATIVE:
+                return POSITIVE;
+            case POSITIVE:
+                return NEGATIVE;
+            case NON_NEGATIVE:
+                return NON_POSITIVE;
+            case NON_POSITIVE:
+                return NON_NEGATIVE;
+            default:
+                return this; // BOTTOM, ZERO, NOT_ZERO, TOP remain unchanged
+        }
     }
 
 }
