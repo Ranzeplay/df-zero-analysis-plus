@@ -109,11 +109,11 @@ public enum ZeroAbstractValue {
          }
          // 2
          if ((this.equals(POSITIVE) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(POSITIVE))) {
-            return NON_NEGATIVE;
+             return POSITIVE;
          }
          // 2
          if ((this.equals(NEGATIVE) && another.equals(NON_POSITIVE)) || (this.equals(NON_POSITIVE) && another.equals(NEGATIVE))) {
-            return NON_POSITIVE;
+             return NEGATIVE;
          }
          if ((this.equals(NON_POSITIVE) && another.equals(NON_POSITIVE))) {
             return NON_POSITIVE;
@@ -159,26 +159,19 @@ public enum ZeroAbstractValue {
             return ZERO; // 0 divided by anything is 0
         }
         if(another.equals(NOT_ZERO)) {
-            return TOP; // Dividing by a non-zero value doesn't change the sign
+            return TOP; // The denominator can have either sign, and division may truncate to zero.
         }
-        if (another.equals(POSITIVE)) {
+        if (another.equals(POSITIVE) || another.equals(NON_NEGATIVE)) {
+            if (this.equals(NEGATIVE)) return NON_POSITIVE;
+            if (this.equals(POSITIVE)) return NON_NEGATIVE;
+            if (this.equals(NOT_ZERO)) return TOP;
             return this;
         }
-        if (another.equals(NEGATIVE)) {
+        if (another.equals(NEGATIVE) || another.equals(NON_POSITIVE)) {
+            if (this.equals(NEGATIVE)) return NON_NEGATIVE;
+            if (this.equals(POSITIVE)) return NON_POSITIVE;
+            if (this.equals(NOT_ZERO)) return TOP;
             return this.negate();
-        }
-        if (another.equals(NON_POSITIVE)) {
-            if (this.equals(POSITIVE)) {
-                return NON_NEGATIVE;
-            } else if (this.equals(NEGATIVE)) {
-                return NON_POSITIVE;
-            } else if (this.equals(NON_POSITIVE)) {
-                return NON_NEGATIVE;
-            } else if (this.equals(NON_NEGATIVE)) {
-                return NON_POSITIVE;
-            } else if (this.equals(NOT_ZERO)) {
-                return TOP;
-            }
         }
         return TOP;
     }
@@ -207,11 +200,11 @@ public enum ZeroAbstractValue {
             } else if (another.equals(NEGATIVE)) {
                 return NON_NEGATIVE;
             } else if (another.equals(NON_POSITIVE)) {
-                return NON_POSITIVE;
+                return NON_NEGATIVE;
             } else if (another.equals(NON_NEGATIVE)) {
                 return NON_POSITIVE;
             } else if (another.equals(NOT_ZERO)) {
-                return NOT_ZERO;
+                return TOP;
             }
         }
         if (this.equals(NON_NEGATIVE)) {
@@ -224,11 +217,11 @@ public enum ZeroAbstractValue {
             } else if (another.equals(NON_NEGATIVE)) {
                 return NON_NEGATIVE;
             } else if (another.equals(NOT_ZERO)) {
-                return NOT_ZERO;
+                return TOP;
             }
         }
         if (this.equals(NOT_ZERO)) {
-            if (another.equals(POSITIVE) || another.equals(NEGATIVE) || another.equals(NOT_ZERO)|| another.equals(NON_POSITIVE) || another.equals(NON_NEGATIVE)) {
+            if (another.equals(POSITIVE) || another.equals(NEGATIVE) || another.equals(NOT_ZERO)) {
                 return NOT_ZERO;
             }
         }
@@ -277,8 +270,8 @@ public enum ZeroAbstractValue {
             
             }
         }
-        // For NON_POSITIVE, NON_NEGATIVE, NOT_ZERO, and TOP, we can conservatively return TOP
-        return TOP; // Default case
+        // For the remaining cases, subtract by negating the right operand and adding.
+        return this.add(another.negate());
     }
 
     /**
@@ -290,8 +283,11 @@ public enum ZeroAbstractValue {
         if (this.equals(another)){
             return this;
         }
-        if (this.equals(BOTTOM)||another.equals(BOTTOM)) {
-            return BOTTOM;
+        if (this.equals(BOTTOM)) {
+            return another;
+        }
+        if (another.equals(BOTTOM)) {
+            return this;
         }
         if (this.equals(TOP)||another.equals(TOP)) {
             return TOP;
@@ -304,6 +300,12 @@ public enum ZeroAbstractValue {
         }
         if ((this.equals(POSITIVE) && another.equals(NEGATIVE)) || (this.equals(NEGATIVE) && another.equals(POSITIVE))) {
             return NOT_ZERO;
+        }
+        if ((this.equals(NEGATIVE) && another.equals(NON_POSITIVE)) || (this.equals(NON_POSITIVE) && another.equals(NEGATIVE))) {
+            return NON_POSITIVE;
+        }
+        if ((this.equals(POSITIVE) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(POSITIVE))) {
+            return NON_NEGATIVE;
         }
         if ((this.equals(NON_POSITIVE) && another.equals(NON_NEGATIVE)) || (this.equals(NON_NEGATIVE) && another.equals(NON_POSITIVE))) {
             return TOP;
